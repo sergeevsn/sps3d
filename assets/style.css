@@ -1,0 +1,153 @@
+header {
+    background-color: #b7d4ff;
+    color: #000000;
+    text-align: left;
+    padding: 10px 10px 10px 30px;
+}
+
+section {
+    display: grid;
+    grid-template-columns: 1fr 5fr; 
+    padding: 20px;   
+}
+
+@media screen and (max-width: 600px) {
+    section {
+      grid-template-columns: 1fr; /* Одна колонка на узких экранах */
+    }
+  }
+
+.menu-col {
+    max-width: 200px;
+    min-width: 200px;   
+}
+
+.menu-col button {
+    width: 200px;
+    height: 40px;
+    border-radius: 10px;
+}
+
+.load-buttons {
+    display: grid;
+    grid-template-columns: 63px 63px 63px;
+    grid-column-gap: 5px;
+}
+
+
+
+.loaded-status {
+    display: grid;    
+    grid-template-columns: 63px 63px 63px;
+    grid-column-gap: 5px;
+}
+
+.loaded-status img {
+    width: 20px;
+}
+
+.loaded-status div {
+    margin-top: 10px;
+    text-align: center;
+}
+
+
+.load-buttons button {
+    width: 63px;
+    height: 30px;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.plot-col {
+    max-width: 1600px;
+   min-width: 900px;
+}
+
+.controls {   
+    display: grid;
+    grid-template-rows:  1fr 1fr;
+}
+
+.vis-controls {
+    display: grid;
+    grid-template-rows:  1fr 1fr 1fr;
+    background-color: #eeeeee;
+    width: 185px;
+    font-size: 12px;
+    border: solid 1px;
+    margin-top: 15px;    
+    padding: 6px;
+}
+
+.size-controls {
+    display: grid;
+    grid-template-rows:  1fr 1fr 1fr;
+    background-color: #eeeeee;
+    width: 185px;
+    font-size: 12px;
+    border: solid 1px;
+    margin-top: 5px;    
+    padding: 6px;
+}
+
+.test-data-button-container, .submit-button-container {
+    margin-top: 20px;
+}
+
+.load-buttons input {
+    width: 250px;
+   
+}
+
+.format-choser {
+    text-align: left;
+    font-size: 16px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.format-choser table {
+    width: 185px;
+    font-size: 12px;
+    border: solid 1px;
+    margin: 5px;
+    padding: 5px;
+}
+
+.format-choser input {
+    width: 30px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+
+
+.menu-col button:hover:enabled {
+    background-color: #f15656; /* Change to the desired hover color */
+   
+    color: rgb(205, 238, 205);
+}
+
+.menu-col button:disabled, button[disabled] {
+    background-color: #eeeeee; /* Change to the desired hover color */   
+   
+}
+
+.submit-button-container button {
+
+    background-color: rgb(205, 238, 205);
+
+}
+
+.test-data-button-container button {
+  
+    background-color: rgb(205, 238, 205);
+   
+}
+
+.status-bar {
+   text-align : center;
+}
+
+

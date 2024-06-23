@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="assets/style.css">
+    <script src="https://kit.fontawesome.com/3d8a46fe20.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.plot.ly/plotly-2.32.0.min.js" charset="utf-8"></script>
+</head>
+<body>
+    <header>
+        <h1>SPS3D</h2>
+        <h3>Визуализатор 3D cъемки на основе SPS файлов. Показывает координаты источников, приемников и расстановку для выбранного источника. Загружайте свои SPS-файлы 
+            или пробуйте тестовые
+        </h3>
+        <p>Автор <a href="http://sergeevsergei.ru">Сергей Сергеев</a>. Приложение сделано с помощью <a href="https://fastapi.tiangolo.com/">FastAPI</a> и <a href="https://plotly.com/javascript">Plotly.js</a>. <a href="https://github.com/sergeevsn/seismospec_online">Репозиторий на github</a>.                
+      </p>
+      
+    </header>
+
+    <section>
+
+        <div class="menu-col">
+            <h3>Данные</h3>
+            <div class="load-buttons">  
+               <div>                 
+                <input type="file" id="rFileUpload" name="rFile" accept = ".sps, .Rsps, .rps" onchange="setLoadedStatus(0)" style="display:none">
+                <button id="rChooseButton" onclick="document.getElementById('rFileUpload').click();"><i class="fa-solid fa-folder-open"></i> R...</button>
+               </div>
+               <div> 
+                <input type="file" id="sFileUpload" name="sFile" accept = ".sps, .Ssps" onchange="setLoadedStatus(1)" style="display:none">
+                <button id="sChooseButton" onclick="document.getElementById('sFileUpload').click();"> <i class="fa-solid fa-folder-open"></i> S...</button>
+               </div>
+               <div id = "xFileChooseDiv"> 
+                <input type="file" id="xFileUpload" name="xFile" accept = ".sps, .Xsps, .xps" onchange="setLoadedStatus(2)" style="display:none">
+                <button id="xChooseButton" onclick="document.getElementById('xFileUpload').click();"><i class="fa-solid fa-folder-open"></i> X...</button>
+               </div>
+            </div>
+            
+            <div class="loaded-status" id="loadedStatusDiv"> 
+              <div id="statusR"><img src ="assets/minus.png"></div>
+              <div id="statusS"><img src ="assets/minus.png"></div>
+              <div id="statusX"><img src ="assets/minus.png"></div>
+            </div>  
+            <script>              
+              function setLoadedStatus(num) {
+                const statusDivs = document.getElementById("loadedStatusDiv").children;            
+                console.log(statusDivs);
+                statusDivs[num].innerHTML = '<img src ="assets/checked.png">';
+              }             
+             
+            </script>
+
+               
+            <div class="format-choser">           
+                <input type="checkbox" id="recShowTable" onclick="toggleTable('rec')">R-file <a href="https://www.moveoutdata.net/wp-content/uploads/2022/06/SEG-SPS-Format-rev-2_1.pdf">Rev. 2.1 format</a></input>
+                <script>
+                    function toggleTable(table_type) {
+                        var table = document.getElementById(table_type+"FormatChooser");
+                        
+                        if (document.getElementById(table_type+"ShowTable").checked) {
+                            table.style.display = "none";
+                        } else {
+                            table.style.display = "table";
+                        }
+                    }    
+                </script>
+                <table id="recFormatChooser" style="display: none";>              
+                  <thead>
+                    <tr>
+                      <th scope="col">Parameter</th>
+                      <th scope="col">Start</th>
+                      <th scope="col">End</th>
+                    </tr>
+                  </thead>
+                  <tr>
+                    <td>Line</td>
+                    <td><input type="number" min="1" max="80" step="1" value="2"></td>
+                    <td><input type="number" min="1" max="80" step="1" value="11"></td>
+                  </tr>  
+                  <tr>
+                    <td>Station</td>
+                    <td><input type="number" min="1" max="80" step="1" value="12"></td>
+                    <td><input type="number" min="1" max="80" step="1" value="21"></td>
+                  </tr>  
+                  <tr>
+                    <td>X coord</td>
+                    <td><input type="number" min="1" max="80" step="1" value="47"></td>
+                    <td><input type="number" min="1" max="80" step="1" value="55"></td>
+                  </tr>  
+                  <tr>
+                    <td>Y coord</td>
+                    <td><input type="number" min="1" max="80" step="1" value="56"></td>
+                    <td><input type="number" min="1" max="80" step="1" value="65"></td>
+                  </tr>  
+                  <tr>
+                    <td>Elevation</td>
+                    <td><input type="number" min="1" max="80" step="1" value="66"></td>
+                    <td><input type="number" min="1" max="80" step="1" value="71"></td>
+                  </tr>  
+                </table>
+
+                <input type="checkbox" id="souShowTable" onclick="toggleTable('sou')">S-file <a href="https://www.moveoutdata.net/wp-content/uploads/2022/06/SEG-SPS-Format-rev-2_1.pdf">Rev. 2.1 format</a></input>
+                <table id="souFormatChooser" style="display: none";>              
+                    <thead>
+                      <tr>
+                        <th scope="col">Parameter</th>
+                        <th scope="col">Start</th>
+                        <th scope="col">End</th>
+                      </tr>
+                    </thead>
+                    <tr>
+                      <td>Line</td>
+                      <td><input type="number" min="1" max="80" step="1" value="2"></td>
+                      <td><input type="number" min="1" max="80" step="1" value="11"></td>
+                    </tr>  
+                    <tr>
+                      <td>Station</td>
+                      <td><input type="number" min="1" max="80" step="1" value="12"></td>
+                      <td><input type="number" min="1" max="80" step="1" value="21"></td>
+                    </tr>  
+                    <tr>
+                    <tr>
+                        <td>Uphole</td>
+                        <td><input type="number" min="1" max="80" step="1" value="39"></td>
+                        <td><input type="number" min="1" max="80" step="1" value="40"></td>
+                    </tr>  
+                    <tr>
+                        <td>Depth</td>
+                        <td><input type="number" min="1" max="80" step="1" value="41"></td>
+                        <td><input type="number" min="1" max="80" step="1" value="46"></td>
+                      </tr>  
+                    <tr>
+                    <tr>
+                      <td>X coord</td>
+                      <td><input id = type="number" min="1" max="80" step="1" value="47"></td>
+                      <td><input type="number" min="1" max="80" step="1" value="55"></td>
+                    </tr>  
+                    <tr>
+                      <td>Y coord</td>
+                      <td><input type="number" min="1" max="80" step="1" value="57"></td>
+                      <td><input type="number" min="1" max="80" step="1" value="65"></td>
+                    </tr>  
+                    <tr>
+                      <td>Elevation</td>
+                      <td><input type="number" min="1" max="80" step="1" value="66"></td>
+                      <td><input type="number" min="1" max="80" step="1" value="71"></td>
+                    </tr>  
+                  </table>
+
+                 
+                <input type="checkbox" id="relShowTable" onclick="toggleTable('rel')">X-file <a href="https://www.moveoutdata.net/wp-content/uploads/2022/06/SEG-SPS-Format-rev-2_1.pdf">Rev. 2.1 format</a></input>
+                <table id="relFormatChooser" style="display: none";>              
+                    <thead>
+                      <tr>
+                        <th scope="col">Parameter</th>
+                        <th scope="col">Start</th>
+                        <th scope="col">End</th>
+                      </tr>
+                    </thead>
+                    <tr>
+                      <td>Sou Line</td>
+                      <td><input type="number" min="1" max="80" step="1" value="18"></td>
+                      <td><input type="number" min="1" max="80" step="1" value="27"></td>
+                    </tr>  
+                    <tr>
+                      <td>Sou Station</td>
+                      <td><input type="number" min="1" max="80" step="1" value="28"></td>
+                      <td><input type="number" min="1" max="80" step="1" value="37"></td>
+                    </tr>  
+                    <tr>
+                    <tr>
+                        <td>From Chan</td>
+                        <td><input type="number" min="1" max="80" step="1" value="39"></td>
+                        <td><input type="number" min="1" max="80" step="1" value="43"></td>
+                    </tr>  
+                    <tr>
+                        <td>To Chan</td>
+                        <td><input type="number" min="1" max="80" step="1" value="44"></td>
+                        <td><input type="number" min="1" max="80" step="1" value="48"></td>
+                      </tr>  
+                    <tr>
+                    <tr>
+                      <td>Rec Line</td>
+                      <td><input type="number" min="1" max="80" step="1" value="50"></td>
+                      <td><input type="number" min="1" max="80" step="1" value="59"></td>
+                    </tr>  
+                    <tr>
+                      <td>From Rec</td>
+                      <td><input type="number" min="1" max="80" step="1" value="60"></td>
+                      <td><input type="number" min="1" max="80" step="1" value="69"></td>
+                    </tr>  
+                    <tr>
+                      <td>To Rec</td>
+                      <td><input type="number" min="1" max="80" step="1" value="70"></td>
+                      <td><input type="number" min="1" max="80" step="1" value="79"></td>
+                    </tr>  
+                  </table>
+            
+            </div>
+
+            <div class="submit-button-container">               
+                <button id="filesSubmit"><i class="fa-solid fa-upload "></i></i> Загрузить файлы</button>    
+            </div>
+             
+            <div class="test-data-button-container">
+               <button id="testDataLoad">Тестовые данные</button>  
+            </div>
+
+            <div id="controls" class="controls">        
+              <div class="vis-controls">
+                <h3>Видимость</h3>
+                <div><input type="checkbox" id="sourceVisibilityCheckbox" name="sourceVisibility" checked> <label for=sourceVisibility">Sources</label></div>                       
+                <div><input type="checkbox" id="receiverVisibilityCheckbox" name="receiverVisibility" checked> <label for=receiverVisibility">Receivers</label></div>
+                <div><input type="checkbox" id="patternVisibilityCheckbox" name="patternVisibility" checked> <label for=patternVisibility">Pattern</label></div>                 
+              </div>             
+          
+              <div class="size-controls">
+                <h3>Размер</h3>
+                <div>
+                  <label for="quantity">Receiver size:</label>
+                  <input type="range" id="receiverSizeRange" name="receiverSize" min="1" max="10">              
+              </div>     
+                <div>
+                    <label for="quantity">Source size:</label>
+                    <input type="range" id="sourceSizeRange" name="sourceSize" min="1" max="10">              
+                </div>                       
+
+                <div>
+                    <label for="quantity">Pattern size:</label>             
+                    <input type="range" id="patternSizeRange" name="patternSize" min="1" max="10">
+                </div>          
+              </div>  
+          </div>
+        
+        
+        </div>
+        
+
+
+        <div class="plot-col" id="container">
+            <div id="survey">
+
+            </div>
+            <div id="selectionInfo" class="selection-info">
+              <div class = "status-bar">
+                  <span>Selected Source:</span>X=<span id="selectedSourceX"></span>, Y=<span id="selectedSourceY"></span>              
+              </div>
+          </div>
+        </div>
+
+    </section>
+    <script type="module" src="scripts/main.js"></script>
+</body>
+</html>
